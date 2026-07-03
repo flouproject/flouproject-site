@@ -74,6 +74,58 @@ button {
   outline-offset: 2px;
 }
 
+/* Kartu event/produk — angkat halus saat di-hover, dipakai di listing
+   ala mynoosa (grid kartu bergambar). */
+.hover-card {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.hover-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -12px rgba(46, 46, 46, 0.22);
+}
+
+/* Chip filter kategori — pil kecil warna-warni sesuai palet logo. */
+.chip {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+/* Baris scroll horizontal untuk "Event Terdekat", scrollbar disembunyikan. */
+.scroll-row {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 8px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scroll-row::-webkit-scrollbar {
+  display: none;
+}
+.scroll-row > * {
+  scroll-snap-align: start;
+}
+
+/* Badge tanggal di pojok gambar kartu event. */
+.date-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 6px 10px;
+  text-align: center;
+  box-shadow: 0 4px 10px -4px rgba(46, 46, 46, 0.35);
+  line-height: 1.1;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;

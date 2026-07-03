@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { TICKET_TIERS } from "../lib/tickets";
 import { colors, fonts } from "../lib/theme";
 
 const MIDTRANS_CLIENT_KEY = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY;
@@ -12,6 +11,7 @@ const SNAP_SRC = MIDTRANS_IS_PRODUCTION
   : "https://app.sandbox.midtrans.com/snap/snap.js";
 
 function formatRupiah(amount) {
+  if (amount === 0) return "Gratis";
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
@@ -19,18 +19,16 @@ function formatRupiah(amount) {
   }).format(amount);
 }
 
-export default function RegistrationForm() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    whatsapp: "",
-    ticketTier: TICKET_TIERS[0]?.id || "",
-  });
+export default function RegistrationForm({ event }) {
+  const [form, setForm] = useState({ name: "", email: "", whatsapp: "" });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [snapReady, setSnapReady] = useState(false);
 
+  const isFree = event.price === 0;
+
   useEffect(() => {
+    if (isFree) return; // event gratis tidak butuh Midtrans Snap
     const script = document.createElement("script");
     script.src = SNAP_SRC;
     script.setAttribute("data-client-key", MIDTRANS_CLIENT_KEY || "");
@@ -39,7 +37,7 @@ export default function RegistrationForm() {
     return () => {
       document.body.removeChild(script);
     };
-  }, []);
+  }, [isFree]);
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -49,7 +47,7 @@ export default function RegistrationForm() {
     e.preventDefault();
     setMessage(null);
 
-    if (!snapReady || !window.snap) {
+    if (!isFree && (!snapReady || !window.snap)) {
       setMessage({ type: "error", text: "Sistem pembayaran belum siap, coba lagi sebentar." });
       return;
     }
@@ -59,12 +57,21 @@ export default function RegistrationForm() {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, eventSlug: event.slug }),
       });
       const data = await res.json();
 
       if (!res.ok) {
         setMessage({ type: "error", text: data.error || "Pendaftaran gagal." });
+        setLoading(false);
+        return;
+      }
+
+      if (data.free) {
+        setMessage({
+          type: "success",
+          text: "Pendaftaran berhasil! Sampai jumpa di lokasi ya.",
+        });
         setLoading(false);
         return;
       }
@@ -99,26 +106,19 @@ export default function RegistrationForm() {
     }
   }
 
-  const selectedTier = TICKET_TIERS.find((t) => t.id === form.ticketTier);
-
   return (
     <form
       onSubmit={handleSubmit}
       style={{
-        maxWidth: 480,
-        margin: "0 auto",
         background: colors.paperRaised,
-        borderRadius: 4,
-        padding: 36,
+        borderRadius: 16,
+        padding: 32,
         border: `1px solid ${colors.line}`,
       }}
     >
-      <div style={{ fontFamily: fonts.accent, fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: colors.sage, marginBottom: 10 }}>
-        Workshop
-      </div>
-      <h1 style={{ fontSize: 25, marginBottom: 6 }}>Pendaftaran Workshop</h1>
-      <p style={{ color: colors.textMuted, marginBottom: 26, fontSize: 14 }}>
-        Isi data di bawah, lalu lanjutkan ke pembayaran.
+      <h2 style={{ fontSize: 24, marginBottom: 4 }}>Daftar Sekarang</h2>
+      <p style={{ color: colors.textMuted, marginBottom: 22, fontSize: 14 }}>
+        Isi data di bawah untuk mengamankan tempatmu.
       </p>
 
       <Field label="Nama Lengkap">
@@ -155,28 +155,6 @@ export default function RegistrationForm() {
         />
       </Field>
 
-      <Field label="Tipe Tiket">
-        <select
-          required
-          name="ticketTier"
-          value={form.ticketTier}
-          onChange={handleChange}
-          style={inputStyle}
-        >
-          {TICKET_TIERS.map((tier) => (
-            <option key={tier.id} value={tier.id}>
-              {tier.name} — {formatRupiah(tier.price)}
-            </option>
-          ))}
-        </select>
-      </Field>
-
-      {selectedTier?.description && (
-        <p style={{ fontSize: 13, color: colors.textMuted, marginTop: -8, marginBottom: 16 }}>
-          {selectedTier.description}
-        </p>
-      )}
-
       <button
         type="submit"
         disabled={loading}
@@ -191,9 +169,10 @@ export default function RegistrationForm() {
           fontWeight: 600,
           fontFamily: fonts.body,
           cursor: loading ? "not-allowed" : "pointer",
+          marginTop: 6,
         }}
       >
-        {loading ? "Memproses..." : `Bayar ${selectedTier ? formatRupiah(selectedTier.price) : ""}`}
+        {loading ? "Memproses..." : isFree ? "Daftar Gratis" : `Bayar ${formatRupiah(event.price)}`}
       </button>
 
       {message && (
@@ -201,7 +180,7 @@ export default function RegistrationForm() {
           style={{
             marginTop: 16,
             padding: 12,
-            borderRadius: 4,
+            borderRadius: 8,
             fontSize: 14,
             background:
               message.type === "success"
@@ -238,7 +217,7 @@ function Field({ label, children }) {
 const inputStyle = {
   width: "100%",
   padding: "10px 12px",
-  borderRadius: 4,
+  borderRadius: 8,
   border: `1px solid ${colors.line}`,
   fontSize: 15,
   fontFamily: fonts.body,

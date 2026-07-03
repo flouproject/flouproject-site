@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import NavBar from "../../components/NavBar";
+import Footer from "../../components/Footer";
 import { useCart } from "../../lib/CartContext";
 import { colors, fonts } from "../../lib/theme";
 
@@ -112,7 +113,7 @@ export default function KeranjangPage() {
                   justifyContent: "space-between",
                   alignItems: "center",
                   background: colors.paperRaised,
-                  borderRadius: 4,
+                  borderRadius: 14,
                   border: `1px solid ${colors.line}`,
                   padding: 16,
                   marginBottom: 12,
@@ -157,7 +158,7 @@ export default function KeranjangPage() {
         {items.length > 0 && (
           <form
             onSubmit={handleCheckout}
-            style={{ background: colors.paperRaised, borderRadius: 4, border: `1px solid ${colors.line}`, padding: 28 }}
+            style={{ background: colors.paperRaised, borderRadius: 16, border: `1px solid ${colors.line}`, padding: 28 }}
           >
             <h2 style={{ fontSize: 19, marginBottom: 18 }}>Data Pengiriman</h2>
 
@@ -218,6 +219,7 @@ export default function KeranjangPage() {
           </div>
         )}
       </main>
+      <Footer />
     </>
   );
 }

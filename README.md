@@ -13,7 +13,8 @@ Dibangun dengan Next.js + Supabase + Midtrans.
 ## 1. Setup Supabase (Database)
 
 1. Buat project di [supabase.com](https://supabase.com) (gratis).
-2. Buka **SQL Editor**, jalankan seluruh isi `supabase-schema.sql` (ada tabel `registrations`, `products`, `orders`, plus 2 contoh produk).
+2. Buka **SQL Editor**, jalankan seluruh isi `supabase-schema.sql` (ada tabel `registrations`, `products`, `orders`, `events`, plus contoh data untuk tiap tabel).
+   - Kalau tabel `events` kamu sudah pernah dibuat sebelumnya (dari versi lama project ini), cukup jalankan ulang seluruh file — semua statement pakai `if not exists` / `on conflict do nothing` jadi aman dijalankan berkali-kali.
 3. Ambil kredensial di **Project Settings > API Keys**:
    - **Project URL** → `SUPABASE_URL`
    - **Secret key** (`sb_secret_...`, tab "Publishable and secret API keys") **atau** **service_role key** (tab "Legacy API Keys") → `SUPABASE_SERVICE_ROLE_KEY`
@@ -54,10 +55,11 @@ npm run dev
 4. Deploy → dapat URL publik.
 5. Daftarkan URL webhook ke Midtrans (lihat langkah 2.5).
 
-## 5. Kelola Produk
+## 5. Kelola Produk & Event/Workshop
 
-Untuk sekarang, tambah/ubah/hapus produk dilakukan langsung lewat **Supabase Dashboard > Table Editor > products**:
-- `slug` — dipakai di URL, harus unik, contoh: `tas-rajut-mini`
+Untuk sekarang, tambah/ubah/hapus produk maupun event dilakukan langsung lewat **Supabase Dashboard > Table Editor**:
+- Tabel `products` — `slug` dipakai di URL, harus unik, contoh: `tas-rajut-mini`
+- Tabel `events` — setiap baris = 1 workshop dengan tanggal (`event_date`), jam (`event_time`), lokasi, harga, dan kuota sendiri. Tampil otomatis di halaman `/workshop` dan bagian "Event Terdekat" di beranda, urut dari tanggal terdekat. Set `price = 0` untuk event gratis (langsung terdaftar tanpa pembayaran Midtrans).
 - `price` — dalam Rupiah, angka bulat
 - `image_url` — link gambar produk (bisa upload ke Supabase Storage atau host lain, lalu paste link-nya)
 - `stock` — jumlah stok, otomatis berkurang saat pesanan lunas

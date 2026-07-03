@@ -94,6 +94,93 @@ values
 on conflict (slug) do nothing;
 
 -- =========================================================
+-- EVENT / WORKSHOP (banyak event, masing-masing punya tanggal,
+-- lokasi, gambar & harga sendiri — dipakai di halaman /workshop
+-- ala listing "mynoosa": grid kartu + filter kategori)
+-- =========================================================
+
+create table if not exists events (
+  id uuid primary key default gen_random_uuid(),
+  slug text unique not null,
+  title text not null,
+  description text,
+  image_url text,
+  category text not null default 'lainnya',
+  location text not null default 'Flou Project Space',
+  event_date date not null,
+  event_time text not null default '',
+  price integer not null default 0,
+  quota integer,
+  is_active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+alter table events enable row level security;
+drop policy if exists "Public can view active events" on events;
+create policy "Public can view active events"
+  on events for select
+  using (is_active = true);
+
+-- Hubungkan pendaftaran ke event tertentu. Kolom lama (ticket_tier,
+-- ticket_name) tetap dipakai untuk menyimpan slug & judul event supaya
+-- dashboard admin yang sudah ada tidak perlu diubah.
+alter table registrations add column if not exists event_id uuid references events(id);
+
+create index if not exists idx_registrations_event_id on registrations (event_id);
+
+insert into events (slug, title, description, category, location, event_date, event_time, price, quota, image_url)
+values
+  (
+    'rajut-untuk-pemula',
+    'Workshop Rajut untuk Pemula',
+    'Belajar teknik dasar merajut dari nol — tusuk rantai, tunggal, dan ganda — sampai pulang bawa pulang karya sendiri. Semua alat & bahan disediakan.',
+    'rajut',
+    'Flou Project Space, Bandung',
+    current_date + interval '14 days',
+    '09.00 - 12.00',
+    150000,
+    15,
+    null
+  ),
+  (
+    'makrame-dasar',
+    'Kelas Makrame Dasar: Gantungan Dinding',
+    'Kenalan sama simpul-simpul dasar makrame dan bikin gantungan dinding mini buat mempercantik ruangan kamu.',
+    'makrame',
+    'Flou Project Space, Bandung',
+    current_date + interval '21 days',
+    '13.00 - 16.00',
+    175000,
+    12,
+    null
+  ),
+  (
+    'flanel-keluarga',
+    'Workshop Flanel: Orang Tua & Anak',
+    'Sesi seru bikin gantungan kunci flanel bareng si kecil. Cocok untuk anak usia 6 tahun ke atas, ditemani orang tua.',
+    'flanel',
+    'Flou Project Space, Bandung',
+    current_date + interval '28 days',
+    '10.00 - 12.00',
+    120000,
+    20,
+    null
+  ),
+  (
+    'ngobrol-kriya',
+    'Ngobrol Kriya: Temu Komunitas',
+    'Sesi santai kumpul bareng komunitas kriya lokal — sharing proses berkarya, tukar ide, sambil ngeteh bareng. Gratis, kuota terbatas.',
+    'komunitas',
+    'Flou Project Space, Bandung',
+    current_date + interval '7 days',
+    '16.00 - 18.00',
+    0,
+    30,
+    null
+  )
+on conflict (slug) do nothing;
+
+-- =========================================================
 -- KATEGORI PRODUK (untuk chip filter di halaman /produk)
 -- Jalankan blok ini di Supabase SQL Editor jika tabel products
 -- sudah ada sebelumnya (aman dijalankan berkali-kali).

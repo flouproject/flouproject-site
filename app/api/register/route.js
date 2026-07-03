@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { getSupabaseServerClient } from "../../../lib/supabase";
-import { getTierById } from "../../../lib/tickets";
 
 const MIDTRANS_IS_PRODUCTION = process.env.MIDTRANS_IS_PRODUCTION === "true";
 const MIDTRANS_SNAP_URL = MIDTRANS_IS_PRODUCTION
@@ -10,38 +9,41 @@ const MIDTRANS_SNAP_URL = MIDTRANS_IS_PRODUCTION
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { name, email, whatsapp, ticketTier } = body;
+    const { name, email, whatsapp, eventSlug } = body;
 
     // --- Validasi input dasar ---
-    if (!name || !email || !whatsapp || !ticketTier) {
+    if (!name || !email || !whatsapp || !eventSlug) {
       return NextResponse.json(
-        { error: "Semua field wajib diisi (nama, email, whatsapp, tiket)." },
-        { status: 400 }
-      );
-    }
-
-    const tier = getTierById(ticketTier);
-    if (!tier) {
-      return NextResponse.json(
-        { error: "Tipe tiket tidak valid." },
+        { error: "Semua field wajib diisi (nama, email, whatsapp, event)." },
         { status: 400 }
       );
     }
 
     const supabase = getSupabaseServerClient();
 
+    const { data: event, error: eventError } = await supabase
+      .from("events")
+      .select("*")
+      .eq("slug", eventSlug)
+      .eq("is_active", true)
+      .single();
+
+    if (eventError || !event) {
+      return NextResponse.json({ error: "Event tidak ditemukan." }, { status: 404 });
+    }
+
     // --- Cek kuota sederhana (opsional) ---
-    if (tier.quota) {
+    if (event.quota) {
       const { count, error: countError } = await supabase
         .from("registrations")
         .select("*", { count: "exact", head: true })
-        .eq("ticket_tier", tier.id)
+        .eq("event_id", event.id)
         .neq("payment_status", "failed");
 
       if (countError) throw countError;
-      if (count >= tier.quota) {
+      if (count >= event.quota) {
         return NextResponse.json(
-          { error: `Kuota untuk tiket "${tier.name}" sudah habis.` },
+          { error: `Kuota untuk "${event.title}" sudah habis.` },
           { status: 409 }
         );
       }
@@ -60,9 +62,10 @@ export async function POST(request) {
         name,
         email,
         whatsapp,
-        ticket_tier: tier.id,
-        ticket_name: tier.name,
-        amount: tier.price,
+        event_id: event.id,
+        ticket_tier: event.slug,
+        ticket_name: event.title,
+        amount: event.price,
         payment_status: "pending",
         midtrans_order_id: orderId,
       })
@@ -70,6 +73,16 @@ export async function POST(request) {
       .single();
 
     if (insertError) throw insertError;
+
+    // --- Event gratis: langsung tandai lunas, tidak perlu Midtrans ---
+    if (event.price === 0) {
+      await supabase
+        .from("registrations")
+        .update({ payment_status: "paid" })
+        .eq("id", inserted.id);
+
+      return NextResponse.json({ free: true, orderId });
+    }
 
     // --- Request Snap token ke Midtrans ---
     const serverKey = process.env.MIDTRANS_SERVER_KEY;
@@ -91,7 +104,7 @@ export async function POST(request) {
       body: JSON.stringify({
         transaction_details: {
           order_id: orderId,
-          gross_amount: tier.price,
+          gross_amount: event.price,
         },
         customer_details: {
           first_name: name,
@@ -100,10 +113,10 @@ export async function POST(request) {
         },
         item_details: [
           {
-            id: tier.id,
-            price: tier.price,
+            id: event.slug,
+            price: event.price,
             quantity: 1,
-            name: tier.name,
+            name: event.title,
           },
         ],
       }),

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import NavBar from "../../components/NavBar";
+import Footer from "../../components/Footer";
 import { colors, fonts } from "../../lib/theme";
 
 function formatRupiah(amount) {
@@ -105,9 +106,10 @@ export default function ProdukPage() {
             <Link
               key={p.id}
               href={`/produk/${p.slug}`}
+              className="hover-card"
               style={{
                 background: colors.paperRaised,
-                borderRadius: 4,
+                borderRadius: 16,
                 overflow: "hidden",
                 textDecoration: "none",
                 color: colors.ink,
@@ -146,6 +148,7 @@ export default function ProdukPage() {
           ))}
         </div>
       </main>
+      <Footer />
     </>
   );
 }
@@ -154,18 +157,12 @@ function CategoryChip({ label, active, color, onClick }) {
   return (
     <button
       onClick={onClick}
+      className="chip"
       style={{
-        padding: "8px 18px",
-        borderRadius: 999,
         border: `1.5px solid ${active ? color : colors.line}`,
         background: active ? color : colors.paperRaised,
         color: active ? "#fff" : colors.ink,
-        fontFamily: fonts.body,
-        fontWeight: 700,
-        fontSize: 13,
         textTransform: "capitalize",
-        cursor: "pointer",
-        transition: "background 0.15s, border-color 0.15s",
       }}
     >
       {label}

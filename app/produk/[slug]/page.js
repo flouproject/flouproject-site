@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import NavBar from "../../../components/NavBar";
+import Footer from "../../../components/Footer";
 import { useCart } from "../../../lib/CartContext";
 import { colors, fonts } from "../../../lib/theme";
 
@@ -76,7 +77,7 @@ export default function ProductDetailPage() {
             flex: "1 1 300px",
             aspectRatio: "1/1",
             background: colors.paper,
-            borderRadius: 4,
+            borderRadius: 16,
             border: `1px solid ${colors.line}`,
             backgroundImage: product.image_url ? `url(${product.image_url})` : undefined,
             backgroundSize: "cover",
@@ -168,6 +169,7 @@ export default function ProductDetailPage() {
           )}
         </div>
       </main>
+      <Footer />
     </>
   );
 }
