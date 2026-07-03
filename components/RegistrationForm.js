@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { TICKET_TIERS } from "../lib/tickets";
+import { colors, fonts } from "../lib/theme";
 
 const MIDTRANS_CLIENT_KEY = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY;
 const MIDTRANS_IS_PRODUCTION =
@@ -26,7 +27,7 @@ export default function RegistrationForm() {
     ticketTier: TICKET_TIERS[0]?.id || "",
   });
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState(null); // { type: 'success'|'error'|'info', text }
+  const [message, setMessage] = useState(null);
   const [snapReady, setSnapReady] = useState(false);
 
   useEffect(() => {
@@ -106,14 +107,17 @@ export default function RegistrationForm() {
       style={{
         maxWidth: 480,
         margin: "0 auto",
-        background: "#fff",
-        borderRadius: 16,
-        padding: 32,
-        boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+        background: colors.paperRaised,
+        borderRadius: 4,
+        padding: 36,
+        border: `1px solid ${colors.line}`,
       }}
     >
-      <h1 style={{ fontSize: 24, marginBottom: 4 }}>Pendaftaran Workshop</h1>
-      <p style={{ color: "#666", marginBottom: 24, fontSize: 14 }}>
+      <div style={{ fontFamily: fonts.accent, fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: colors.sage, marginBottom: 10 }}>
+        Workshop
+      </div>
+      <h1 style={{ fontSize: 25, marginBottom: 6 }}>Pendaftaran Workshop</h1>
+      <p style={{ color: colors.textMuted, marginBottom: 26, fontSize: 14 }}>
         Isi data di bawah, lalu lanjutkan ke pembayaran.
       </p>
 
@@ -168,7 +172,7 @@ export default function RegistrationForm() {
       </Field>
 
       {selectedTier?.description && (
-        <p style={{ fontSize: 13, color: "#888", marginTop: -8, marginBottom: 16 }}>
+        <p style={{ fontSize: 13, color: colors.textMuted, marginTop: -8, marginBottom: 16 }}>
           {selectedTier.description}
         </p>
       )}
@@ -179,12 +183,13 @@ export default function RegistrationForm() {
         style={{
           width: "100%",
           padding: "14px 0",
-          background: loading ? "#999" : "#111",
+          background: loading ? "#999" : colors.coral,
           color: "#fff",
           border: "none",
-          borderRadius: 10,
+          borderRadius: 999,
           fontSize: 16,
           fontWeight: 600,
+          fontFamily: fonts.body,
           cursor: loading ? "not-allowed" : "pointer",
         }}
       >
@@ -196,20 +201,20 @@ export default function RegistrationForm() {
           style={{
             marginTop: 16,
             padding: 12,
-            borderRadius: 8,
+            borderRadius: 4,
             fontSize: 14,
             background:
               message.type === "success"
-                ? "#e6f7ed"
+                ? "#e9efe8"
                 : message.type === "error"
-                ? "#fdecea"
-                : "#eef3fb",
+                ? "#f6e8e5"
+                : "#e8eef2",
             color:
               message.type === "success"
-                ? "#1e7e42"
+                ? colors.success
                 : message.type === "error"
-                ? "#c0392b"
-                : "#2c5aa0",
+                ? colors.danger
+                : colors.info,
           }}
         >
           {message.text}
@@ -233,8 +238,9 @@ function Field({ label, children }) {
 const inputStyle = {
   width: "100%",
   padding: "10px 12px",
-  borderRadius: 8,
-  border: "1px solid #ddd",
+  borderRadius: 4,
+  border: `1px solid ${colors.line}`,
   fontSize: 15,
+  fontFamily: fonts.body,
   boxSizing: "border-box",
 };

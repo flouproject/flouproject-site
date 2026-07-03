@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import NavBar from "../../../components/NavBar";
 import { useCart } from "../../../lib/CartContext";
+import { colors, fonts } from "../../../lib/theme";
 
 function formatRupiah(amount) {
   return new Intl.NumberFormat("id-ID", {
@@ -41,7 +42,7 @@ export default function ProductDetailPage() {
     return (
       <>
         <NavBar />
-        <main style={{ padding: 32 }}>Memuat...</main>
+        <main style={{ padding: 32, color: colors.textMuted }}>Memuat...</main>
       </>
     );
   }
@@ -51,7 +52,7 @@ export default function ProductDetailPage() {
       <>
         <NavBar />
         <main style={{ padding: 32 }}>
-          <p>Produk tidak ditemukan.</p>
+          <p style={{ color: colors.textMuted }}>Produk tidak ditemukan.</p>
         </main>
       </>
     );
@@ -62,11 +63,11 @@ export default function ProductDetailPage() {
       <NavBar />
       <main
         style={{
-          padding: "32px 24px",
-          maxWidth: 800,
+          padding: "48px 24px 72px",
+          maxWidth: 860,
           margin: "0 auto",
           display: "flex",
-          gap: 32,
+          gap: 40,
           flexWrap: "wrap",
         }}
       >
@@ -74,23 +75,24 @@ export default function ProductDetailPage() {
           style={{
             flex: "1 1 300px",
             aspectRatio: "1/1",
-            background: "#eee",
-            borderRadius: 14,
+            background: colors.paper,
+            borderRadius: 4,
+            border: `1px solid ${colors.line}`,
             backgroundImage: product.image_url ? `url(${product.image_url})` : undefined,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         />
         <div style={{ flex: "1 1 300px" }}>
-          <h1 style={{ fontSize: 24, marginBottom: 8 }}>{product.name}</h1>
-          <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 16 }}>
+          <h1 style={{ fontSize: 27, marginBottom: 10 }}>{product.name}</h1>
+          <div className="tag-price" style={{ fontSize: 20, fontWeight: 500, color: colors.coral, marginBottom: 20 }}>
             {formatRupiah(product.price)}
           </div>
-          <p style={{ color: "#555", lineHeight: 1.6, marginBottom: 24 }}>
+          <p style={{ color: colors.textMuted, lineHeight: 1.7, marginBottom: 28 }}>
             {product.description}
           </p>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
             <label style={{ fontSize: 14, fontWeight: 600 }}>Jumlah:</label>
             <input
               type="number"
@@ -101,11 +103,12 @@ export default function ProductDetailPage() {
               style={{
                 width: 70,
                 padding: "8px 10px",
-                borderRadius: 8,
-                border: "1px solid #ddd",
+                borderRadius: 4,
+                border: `1px solid ${colors.line}`,
+                fontFamily: fonts.body,
               }}
             />
-            <span style={{ fontSize: 13, color: "#888" }}>Stok: {product.stock}</span>
+            <span style={{ fontSize: 13, color: colors.textMuted }}>Stok: {product.stock}</span>
           </div>
 
           <button
@@ -115,12 +118,13 @@ export default function ProductDetailPage() {
             }}
             disabled={product.stock <= 0}
             style={{
-              padding: "12px 24px",
-              background: product.stock <= 0 ? "#999" : "#111",
+              padding: "13px 26px",
+              background: product.stock <= 0 ? "#999" : colors.coral,
               color: "#fff",
               border: "none",
-              borderRadius: 10,
+              borderRadius: 999,
               fontWeight: 600,
+              fontFamily: fonts.body,
               cursor: product.stock <= 0 ? "not-allowed" : "pointer",
               marginRight: 12,
             }}
@@ -132,12 +136,13 @@ export default function ProductDetailPage() {
             <button
               onClick={() => router.push("/keranjang")}
               style={{
-                padding: "12px 24px",
-                background: "#fff",
-                color: "#111",
-                border: "1px solid #ddd",
-                borderRadius: 10,
+                padding: "13px 26px",
+                background: "transparent",
+                color: colors.ink,
+                border: `1.5px solid ${colors.ink}`,
+                borderRadius: 999,
                 fontWeight: 600,
+                fontFamily: fonts.body,
                 cursor: "pointer",
               }}
             >

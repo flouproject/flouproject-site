@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import NavBar from "../../components/NavBar";
+import { colors, fonts } from "../../lib/theme";
 
 function formatRupiah(amount) {
   return new Intl.NumberFormat("id-ID", {
@@ -34,20 +35,23 @@ export default function ProdukPage() {
   return (
     <>
       <NavBar />
-      <main style={{ padding: "32px 24px", maxWidth: 1000, margin: "0 auto" }}>
-        <h1 style={{ fontSize: 26, marginBottom: 24 }}>Produk Handmade</h1>
+      <main style={{ padding: "48px 24px 72px", maxWidth: 1040, margin: "0 auto" }}>
+        <div style={{ fontFamily: fonts.accent, fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: colors.sage, marginBottom: 10 }}>
+          Koleksi
+        </div>
+        <h1 style={{ fontSize: 30, marginBottom: 32 }}>Produk Handmade</h1>
 
-        {loading && <p style={{ color: "#888" }}>Memuat produk...</p>}
-        {error && <p style={{ color: "#c0392b" }}>{error}</p>}
+        {loading && <p style={{ color: colors.textMuted }}>Memuat produk...</p>}
+        {error && <p style={{ color: colors.danger }}>{error}</p>}
         {!loading && !error && products.length === 0 && (
-          <p style={{ color: "#888" }}>Belum ada produk tersedia.</p>
+          <p style={{ color: colors.textMuted }}>Belum ada produk tersedia.</p>
         )}
 
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-            gap: 20,
+            gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
+            gap: 22,
           }}
         >
           {products.map((p) => (
@@ -55,26 +59,28 @@ export default function ProdukPage() {
               key={p.id}
               href={`/produk/${p.slug}`}
               style={{
-                background: "#fff",
-                borderRadius: 14,
+                background: colors.paperRaised,
+                borderRadius: 4,
                 overflow: "hidden",
                 textDecoration: "none",
-                color: "#111",
-                boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+                color: colors.ink,
+                border: `1px solid ${colors.line}`,
               }}
             >
               <div
                 style={{
                   aspectRatio: "1/1",
-                  background: "#eee",
+                  background: colors.paper,
                   backgroundImage: p.image_url ? `url(${p.image_url})` : undefined,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
               />
-              <div style={{ padding: 14 }}>
-                <div style={{ fontWeight: 600, marginBottom: 4 }}>{p.name}</div>
-                <div style={{ color: "#666", fontSize: 14 }}>{formatRupiah(p.price)}</div>
+              <div style={{ padding: 16 }}>
+                <div style={{ fontWeight: 600, marginBottom: 6, fontSize: 15 }}>{p.name}</div>
+                <div className="tag-price" style={{ color: colors.coral, fontSize: 14 }}>
+                  {formatRupiah(p.price)}
+                </div>
               </div>
             </Link>
           ))}

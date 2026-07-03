@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import NavBar from "../../components/NavBar";
 import { useCart } from "../../lib/CartContext";
+import { colors, fonts } from "../../lib/theme";
 
 const MIDTRANS_CLIENT_KEY = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY;
 const MIDTRANS_IS_PRODUCTION =
@@ -93,11 +94,14 @@ export default function KeranjangPage() {
   return (
     <>
       <NavBar />
-      <main style={{ padding: "32px 24px", maxWidth: 700, margin: "0 auto" }}>
-        <h1 style={{ fontSize: 24, marginBottom: 24 }}>Keranjang Belanja</h1>
+      <main style={{ padding: "48px 24px 72px", maxWidth: 720, margin: "0 auto" }}>
+        <div style={{ fontFamily: fonts.accent, fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: colors.sage, marginBottom: 10 }}>
+          Checkout
+        </div>
+        <h1 style={{ fontSize: 27, marginBottom: 28 }}>Keranjang Belanja</h1>
 
         {items.length === 0 ? (
-          <p style={{ color: "#888" }}>Keranjang kamu masih kosong.</p>
+          <p style={{ color: colors.textMuted }}>Keranjang kamu masih kosong.</p>
         ) : (
           <div style={{ marginBottom: 32 }}>
             {items.map((item) => (
@@ -107,32 +111,36 @@ export default function KeranjangPage() {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  background: "#fff",
-                  borderRadius: 10,
+                  background: colors.paperRaised,
+                  borderRadius: 4,
+                  border: `1px solid ${colors.line}`,
                   padding: 16,
                   marginBottom: 12,
                 }}
               >
                 <div>
                   <div style={{ fontWeight: 600 }}>{item.name}</div>
-                  <div style={{ color: "#888", fontSize: 13 }}>{formatRupiah(item.price)}</div>
+                  <div className="tag-price" style={{ color: colors.textMuted, fontSize: 13 }}>
+                    {formatRupiah(item.price)}
+                  </div>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <input
                     type="number"
                     min={1}
                     value={item.qty}
                     onChange={(e) => updateQty(item.id, Number(e.target.value))}
-                    style={{ width: 56, padding: 6, borderRadius: 6, border: "1px solid #ddd" }}
+                    style={{ width: 56, padding: 6, borderRadius: 4, border: `1px solid ${colors.line}` }}
                   />
                   <button
                     onClick={() => removeItem(item.id)}
                     style={{
                       border: "none",
                       background: "none",
-                      color: "#c0392b",
+                      color: colors.danger,
                       cursor: "pointer",
                       fontSize: 13,
+                      fontFamily: fonts.body,
                     }}
                   >
                     Hapus
@@ -140,7 +148,7 @@ export default function KeranjangPage() {
                 </div>
               </div>
             ))}
-            <div style={{ textAlign: "right", fontWeight: 700, fontSize: 18, marginTop: 12 }}>
+            <div className="tag-price" style={{ textAlign: "right", fontWeight: 700, fontSize: 19, marginTop: 12, color: colors.coral }}>
               Total: {formatRupiah(total)}
             </div>
           </div>
@@ -149,9 +157,9 @@ export default function KeranjangPage() {
         {items.length > 0 && (
           <form
             onSubmit={handleCheckout}
-            style={{ background: "#fff", borderRadius: 14, padding: 24 }}
+            style={{ background: colors.paperRaised, borderRadius: 4, border: `1px solid ${colors.line}`, padding: 28 }}
           >
-            <h2 style={{ fontSize: 18, marginBottom: 16 }}>Data Pengiriman</h2>
+            <h2 style={{ fontSize: 19, marginBottom: 18 }}>Data Pengiriman</h2>
 
             <Field label="Nama Lengkap">
               <input required name="name" value={form.name} onChange={handleChange} style={inputStyle} />
@@ -179,12 +187,13 @@ export default function KeranjangPage() {
               style={{
                 width: "100%",
                 padding: "14px 0",
-                background: loading ? "#999" : "#111",
+                background: loading ? "#999" : colors.coral,
                 color: "#fff",
                 border: "none",
-                borderRadius: 10,
+                borderRadius: 999,
                 fontSize: 16,
                 fontWeight: 600,
+                fontFamily: fonts.body,
                 cursor: loading ? "not-allowed" : "pointer",
                 marginTop: 8,
               }}
@@ -199,10 +208,10 @@ export default function KeranjangPage() {
             style={{
               marginTop: 16,
               padding: 12,
-              borderRadius: 8,
+              borderRadius: 4,
               fontSize: 14,
-              background: message.type === "success" ? "#e6f7ed" : message.type === "error" ? "#fdecea" : "#eef3fb",
-              color: message.type === "success" ? "#1e7e42" : message.type === "error" ? "#c0392b" : "#2c5aa0",
+              background: message.type === "success" ? "#e9efe8" : message.type === "error" ? "#f6e8e5" : "#e8eef2",
+              color: message.type === "success" ? colors.success : message.type === "error" ? colors.danger : colors.info,
             }}
           >
             {message.text}
@@ -225,8 +234,9 @@ function Field({ label, children }) {
 const inputStyle = {
   width: "100%",
   padding: "10px 12px",
-  borderRadius: 8,
-  border: "1px solid #ddd",
+  borderRadius: 4,
+  border: `1px solid ${colors.line}`,
   fontSize: 15,
+  fontFamily: fonts.body,
   boxSizing: "border-box",
 };

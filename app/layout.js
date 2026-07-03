@@ -1,22 +1,28 @@
+import "./globals.css";
 import { CartProvider } from "../lib/CartContext";
 
 export const metadata = {
-  title: "Nama Bisnis Kamu",
-  description: "Produk handmade & workshop",
+  title: "Flou Project",
+  description:
+    "Flou Project — produk handmade dan workshop kriya untuk belajar membuat karya dengan tangan sendiri.",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="id">
-      <body
-        style={{
-          margin: 0,
-          fontFamily:
-            "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-          background: "#f5f5f7",
-          minHeight: "100vh",
-        }}
-      >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="true"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body>
         <CartProvider>{children}</CartProvider>
       </body>
     </html>

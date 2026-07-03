@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCart } from "../lib/CartContext";
+import { colors, fonts } from "../lib/theme";
 
 export default function NavBar() {
   const { itemCount } = useCart();
@@ -12,18 +13,22 @@ export default function NavBar() {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "16px 24px",
-        background: "#fff",
-        borderBottom: "1px solid #eee",
+        padding: "14px 28px",
+        background: colors.paper,
+        borderBottom: `1px solid ${colors.line}`,
         position: "sticky",
         top: 0,
         zIndex: 10,
       }}
     >
-      <Link href="/" style={{ fontWeight: 700, fontSize: 18, textDecoration: "none", color: "#111" }}>
-        Nama Bisnis Kamu
+      <Link href="/" style={{ display: "flex", alignItems: "center" }}>
+        <img
+          src="/logo.png"
+          alt="Flou Project"
+          style={{ height: 40, width: "auto", display: "block" }}
+        />
       </Link>
-      <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
         <Link href="/" style={linkStyle}>Beranda</Link>
         <Link href="/produk" style={linkStyle}>Produk</Link>
         <Link href="/workshop" style={linkStyle}>Workshop</Link>
@@ -33,12 +38,14 @@ export default function NavBar() {
             <span
               style={{
                 position: "absolute",
-                top: -8,
-                right: -14,
-                background: "#111",
+                top: -10,
+                right: -16,
+                background: colors.coral,
                 color: "#fff",
                 borderRadius: "50%",
                 fontSize: 11,
+                fontFamily: fonts.body,
+                fontWeight: 700,
                 width: 18,
                 height: 18,
                 display: "flex",
@@ -57,7 +64,8 @@ export default function NavBar() {
 
 const linkStyle = {
   textDecoration: "none",
-  color: "#333",
+  color: colors.ink,
   fontSize: 14,
-  fontWeight: 500,
+  fontWeight: 600,
+  fontFamily: fonts.body,
 };
