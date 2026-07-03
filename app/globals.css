@@ -5,6 +5,7 @@
   --color-sky-bottom: #E8F0F7;
   --color-charcoal: #1A1A1A;
   --color-highlight: #D9C7F0;
+  --color-highlight-sage: #C9DDBB;
   --color-white: #FFFFFF;
   --color-border: rgba(26,26,26,0.12);
   --color-pill: rgba(255,255,255,0.55);
@@ -26,7 +27,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: var(--color-sky-bottom);
+  background: var(--color-sky-bottom) url('/images/bg-langit.jpg') center/cover no-repeat fixed;
   color: var(--color-charcoal);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
@@ -51,6 +52,78 @@ button, input, textarea, select {
   padding: 2px 10px;
   display: inline-block;
   transform: rotate(-1deg);
+}
+
+.highlight-marker.sage {
+  background: var(--color-highlight-sage);
+}
+
+.highlight-marker.gold {
+  background: #F0BB4D;
+}
+
+.notes-card {
+  margin-top: 26px;
+  background: #FBF8F1;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  max-width: 320px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+  transform: rotate(-1.5deg);
+}
+
+.notes-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #C9982E;
+  margin-bottom: 16px;
+}
+
+.notes-card-tag {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.notes-card-quote {
+  font-family: var(--font-script);
+  font-style: italic;
+  font-size: 16px;
+  color: #2c2c2c;
+  margin: 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 720px) {
+  .about-section {
+    grid-template-columns: 1fr !important;
+  }
+  .about-logo-card {
+    max-width: 220px;
+    margin: 0 auto;
+  }
+}
+
+.section-card {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(6px);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.product-scroll {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: thin;
+}
+
+.product-scroll-item {
+  flex: 0 0 auto;
+  width: 180px;
 }
 
 .wavy-underline {

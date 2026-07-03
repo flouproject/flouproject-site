@@ -16,6 +16,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="id">
       <body>
+        {/* Background langit — berlaku di semua halaman */}
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "url('/images/bg-langit.jpg') center/cover no-repeat",
+            zIndex: -1,
+          }}
+        />
         <CartProvider>{children}</CartProvider>
       </body>
     </html>

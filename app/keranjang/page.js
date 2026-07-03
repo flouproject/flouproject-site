@@ -77,7 +77,6 @@ export default function KeranjangPage() {
 
   return (
     <>
-      <div style={{ position: "fixed", inset: 0, background: "linear-gradient(180deg, var(--color-sky-top) 0%, var(--color-sky-bottom) 55%)", zIndex: -1 }} />
       <NavBar />
       <main style={{ padding: "40px 24px 100px", maxWidth: 640, margin: "0 auto" }}>
         <h1 style={{ fontSize: 30, marginBottom: 28, textAlign: "center" }}>Keranjang</h1>

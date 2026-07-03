@@ -1,21 +1,12 @@
 import NavBar from "../components/NavBar";
 import PolaroidStack from "../components/PolaroidStack";
 import PolaroidRow from "../components/PolaroidRow";
+import AboutSection from "../components/AboutSection";
 import { TOP_PHOTOS, BOTTOM_PHOTOS } from "../lib/photos";
 
 export default function HomePage() {
   return (
     <>
-      {/* Background langit */}
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          background: "url('/images/bg-langit.jpg') center/cover no-repeat",
-          zIndex: -1,
-        }}
-      />
-
       <NavBar />
 
       <main
@@ -85,6 +76,9 @@ export default function HomePage() {
         <div style={{ marginTop: 28 }}>
           <PolaroidRow photos={BOTTOM_PHOTOS} />
         </div>
+
+        {/* Section: Apa itu Flou Project */}
+        <AboutSection />
       </main>
     </>
   );
