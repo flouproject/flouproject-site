@@ -84,6 +84,23 @@ export default function ProductDetailPage() {
           }}
         />
         <div style={{ flex: "1 1 300px" }}>
+          {product.category && (
+            <div
+              style={{
+                display: "inline-block",
+                fontSize: 11,
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                color: colors.textMuted,
+                border: `1px solid ${colors.line}`,
+                borderRadius: 999,
+                padding: "4px 12px",
+                marginBottom: 12,
+              }}
+            >
+              {product.category}
+            </div>
+          )}
           <h1 style={{ fontSize: 27, marginBottom: 10 }}>{product.name}</h1>
           <div className="tag-price" style={{ fontSize: 20, fontWeight: 500, color: colors.coral, marginBottom: 20 }}>
             {formatRupiah(product.price)}

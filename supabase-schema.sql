@@ -92,3 +92,18 @@ values
   ('tas-rajut-mini', 'Tas Rajut Mini', 'Tas rajut handmade ukuran mini, cocok buat sehari-hari.', 85000, null, 10),
   ('gantungan-kunci-flanel', 'Gantungan Kunci Flanel', 'Gantungan kunci lucu dari kain flanel, dibuat tangan.', 25000, null, 20)
 on conflict (slug) do nothing;
+
+-- =========================================================
+-- KATEGORI PRODUK (untuk chip filter di halaman /produk)
+-- Jalankan blok ini di Supabase SQL Editor jika tabel products
+-- sudah ada sebelumnya (aman dijalankan berkali-kali).
+-- =========================================================
+
+alter table products add column if not exists category text not null default 'lainnya';
+
+update products set category = 'rajut' where slug = 'tas-rajut-mini';
+update products set category = 'flanel' where slug = 'gantungan-kunci-flanel';
+
+-- Contoh nilai category yang bisa kamu pakai untuk produk baru:
+-- 'rajut', 'flanel', 'keramik', 'kayu', 'kertas', dst — bebas sesuai jenis produkmu.
+-- Chip filter di halaman Produk otomatis mengikuti nilai category yang ada di data.
