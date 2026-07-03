@@ -4,7 +4,7 @@
   --color-sky-top: #A9C8E8;
   --color-sky-bottom: #E8F0F7;
   --color-charcoal: #1A1A1A;
-  --color-yellow: #F5E14A;
+  --color-highlight: #D9C7F0;
   --color-white: #FFFFFF;
   --color-border: rgba(26,26,26,0.12);
   --color-pill: rgba(255,255,255,0.55);
@@ -47,7 +47,7 @@ button, input, textarea, select {
 }
 
 .highlight-marker {
-  background: var(--color-yellow);
+  background: var(--color-highlight);
   padding: 2px 10px;
   display: inline-block;
   transform: rotate(-1deg);

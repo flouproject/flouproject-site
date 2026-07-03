@@ -4,14 +4,14 @@
 // Kalau `src` kosong, akan tampil placeholder abu-abu dengan label.
 
 const LEFT_PHOTOS = [
-  { src: "", label: "Foto produk 1", top: "0px", left: "0px", rotate: "-6deg", size: 150 },
-  { src: "", label: "Foto workshop 1", top: "150px", left: "40px", rotate: "4deg", size: 110 },
-  { src: "", label: "Foto produk 2", top: "180px", left: "-60px", rotate: "-3deg", size: 110 },
+  { src: "/images/produk-1.jpg", label: "Produk", top: "0px", left: "0px", rotate: "-6deg", size: 150 },
+  { src: "/images/workshop-1.jpg", label: "Workshop", top: "150px", left: "40px", rotate: "4deg", size: 110 },
+  { src: "/images/produk-2.jpg", label: "Produk", top: "180px", left: "-60px", rotate: "-3deg", size: 110 },
 ];
 
 const RIGHT_PHOTOS = [
-  { src: "", label: "Foto workshop 2", top: "0px", right: "0px", rotate: "5deg", size: 130 },
-  { src: "", label: "Foto produk 3", top: "160px", right: "-30px", rotate: "-4deg", size: 150 },
+  { src: "/images/workshop-2.jpg", label: "Workshop", top: "0px", right: "0px", rotate: "5deg", size: 130 },
+  { src: "/images/workshop-3.jpg", label: "Workshop", top: "160px", right: "-30px", rotate: "-4deg", size: 150 },
 ];
 
 export default function PolaroidStack({ side }) {
