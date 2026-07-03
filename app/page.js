@@ -1,5 +1,7 @@
 import NavBar from "../components/NavBar";
 import PolaroidStack from "../components/PolaroidStack";
+import PolaroidRow from "../components/PolaroidRow";
+import { TOP_PHOTOS, BOTTOM_PHOTOS } from "../lib/photos";
 
 export default function HomePage() {
   return (
@@ -25,17 +27,22 @@ export default function HomePage() {
           padding: "40px 24px 120px",
         }}
       >
-        {/* Foto kiri */}
+        {/* Foto kiri (desktop) */}
         <PolaroidStack side="left" />
-        {/* Foto kanan */}
+        {/* Foto kanan (desktop) */}
         <PolaroidStack side="right" />
+
+        {/* Foto baris atas (mobile saja) */}
+        <div style={{ marginTop: 8 }}>
+          <PolaroidRow photos={TOP_PHOTOS} />
+        </div>
 
         {/* Teks hero tengah */}
         <div
           style={{
             textAlign: "center",
             maxWidth: 560,
-            margin: "80px auto 0",
+            margin: "clamp(24px, 8vw, 80px) auto 0",
             position: "relative",
             zIndex: 2,
           }}
@@ -72,6 +79,11 @@ export default function HomePage() {
           >
             crafted quickly, <span className="wavy-underline">loved deeply</span>~
           </p>
+        </div>
+
+        {/* Foto baris bawah (mobile saja) */}
+        <div style={{ marginTop: 28 }}>
+          <PolaroidRow photos={BOTTOM_PHOTOS} />
         </div>
       </main>
     </>

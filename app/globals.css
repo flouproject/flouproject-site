@@ -60,9 +60,36 @@ button, input, textarea, select {
   text-underline-offset: 4px;
 }
 
+/* Desktop: foto tersusun di sisi kiri & kanan teks */
 @media (max-width: 900px) {
   .polaroid-stack {
     display: none;
+  }
+}
+
+/* Mobile: foto berjejer di atas & bawah teks */
+.polaroid-row-mobile {
+  display: none;
+  gap: 10px;
+  justify-content: center;
+  padding: 0 16px;
+  flex-wrap: nowrap;
+}
+
+.polaroid-row-item {
+  background: #fff;
+  padding: 5px;
+  padding-bottom: 12px;
+  border-radius: 4px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+  width: 30%;
+  max-width: 84px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .polaroid-row-mobile {
+    display: flex;
   }
 }
 

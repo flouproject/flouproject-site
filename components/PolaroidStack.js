@@ -17,6 +17,7 @@ const RIGHT_PHOTOS = [
 export default function PolaroidStack({ side }) {
   const photos = side === "left" ? LEFT_PHOTOS : RIGHT_PHOTOS;
   const positionStyle = side === "left" ? { left: "2%" } : { right: "2%" };
+  const transformOrigin = side === "left" ? "top left" : "top right";
 
   return (
     <div
@@ -26,6 +27,7 @@ export default function PolaroidStack({ side }) {
         ...positionStyle,
         width: 220,
         height: 320,
+        transformOrigin,
       }}
       className="polaroid-stack"
     >
