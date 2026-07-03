@@ -3,9 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import NavBar from "../../../components/NavBar";
-import Footer from "../../../components/Footer";
 import { useCart } from "../../../lib/CartContext";
-import { colors, fonts } from "../../../lib/theme";
 
 function formatRupiah(amount) {
   return new Intl.NumberFormat("id-ID", {
@@ -30,11 +28,8 @@ export default function ProductDetailPage() {
       .then((res) => res.json())
       .then((data) => {
         const found = (data.products || []).find((p) => p.slug === params.slug);
-        if (!found) {
-          setNotFound(true);
-        } else {
-          setProduct(found);
-        }
+        if (!found) setNotFound(true);
+        else setProduct(found);
       })
       .finally(() => setLoading(false));
   }, [params.slug]);
@@ -43,7 +38,7 @@ export default function ProductDetailPage() {
     return (
       <>
         <NavBar />
-        <main style={{ padding: 32, color: colors.textMuted }}>Memuat...</main>
+        <main style={{ padding: 56, textAlign: "center", color: "#8a7f6c" }}>Memuat...</main>
       </>
     );
   }
@@ -52,8 +47,8 @@ export default function ProductDetailPage() {
     return (
       <>
         <NavBar />
-        <main style={{ padding: 32 }}>
-          <p style={{ color: colors.textMuted }}>Produk tidak ditemukan.</p>
+        <main style={{ padding: 56, textAlign: "center", color: "#8a7f6c" }}>
+          Produk tidak ditemukan.
         </main>
       </>
     );
@@ -64,54 +59,44 @@ export default function ProductDetailPage() {
       <NavBar />
       <main
         style={{
-          padding: "48px 24px 72px",
-          maxWidth: 860,
+          padding: "56px 40px",
+          maxWidth: 900,
           margin: "0 auto",
           display: "flex",
-          gap: 40,
+          gap: 48,
           flexWrap: "wrap",
         }}
       >
         <div
           style={{
-            flex: "1 1 300px",
+            flex: "1 1 340px",
             aspectRatio: "1/1",
-            background: colors.paper,
-            borderRadius: 16,
-            border: `1px solid ${colors.line}`,
+            background: "var(--color-cream-deep)",
+            borderRadius: "var(--radius-lg)",
             backgroundImage: product.image_url ? `url(${product.image_url})` : undefined,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         />
         <div style={{ flex: "1 1 300px" }}>
-          {product.category && (
-            <div
-              style={{
-                display: "inline-block",
-                fontSize: 11,
-                textTransform: "uppercase",
-                letterSpacing: "0.06em",
-                color: colors.textMuted,
-                border: `1px solid ${colors.line}`,
-                borderRadius: 999,
-                padding: "4px 12px",
-                marginBottom: 12,
-              }}
-            >
-              {product.category}
-            </div>
-          )}
-          <h1 style={{ fontSize: 27, marginBottom: 10 }}>{product.name}</h1>
-          <div className="tag-price" style={{ fontSize: 20, fontWeight: 500, color: colors.coral, marginBottom: 20 }}>
+          <div className="eyebrow" style={{ marginBottom: 12 }}>Produk Handmade</div>
+          <h1 style={{ fontSize: 32, marginBottom: 12 }}>{product.name}</h1>
+          <div
+            style={{
+              fontSize: 22,
+              fontWeight: 600,
+              color: "var(--color-terracotta-deep)",
+              marginBottom: 20,
+            }}
+          >
             {formatRupiah(product.price)}
           </div>
-          <p style={{ color: colors.textMuted, lineHeight: 1.7, marginBottom: 28 }}>
+          <p style={{ color: "#5c5346", lineHeight: 1.7, marginBottom: 28, fontSize: 15 }}>
             {product.description}
           </p>
 
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-            <label style={{ fontSize: 14, fontWeight: 600 }}>Jumlah:</label>
+            <label style={{ fontSize: 13, fontWeight: 600 }}>Jumlah:</label>
             <input
               type="number"
               min={1}
@@ -120,56 +105,56 @@ export default function ProductDetailPage() {
               onChange={(e) => setQty(Math.max(1, Number(e.target.value)))}
               style={{
                 width: 70,
-                padding: "8px 10px",
-                borderRadius: 4,
-                border: `1px solid ${colors.line}`,
-                fontFamily: fonts.body,
+                padding: "10px 12px",
+                borderRadius: "var(--radius-sm)",
+                border: "1px solid var(--color-border)",
+                background: "var(--color-white)",
               }}
             />
-            <span style={{ fontSize: 13, color: colors.textMuted }}>Stok: {product.stock}</span>
+            <span style={{ fontSize: 13, color: "#8a7f6c" }}>Stok: {product.stock}</span>
           </div>
 
-          <button
-            onClick={() => {
-              addItem(product, qty);
-              setAdded(true);
-            }}
-            disabled={product.stock <= 0}
-            style={{
-              padding: "13px 26px",
-              background: product.stock <= 0 ? "#999" : colors.coral,
-              color: "#fff",
-              border: "none",
-              borderRadius: 999,
-              fontWeight: 600,
-              fontFamily: fonts.body,
-              cursor: product.stock <= 0 ? "not-allowed" : "pointer",
-              marginRight: 12,
-            }}
-          >
-            {product.stock <= 0 ? "Stok Habis" : "Tambah ke Keranjang"}
-          </button>
-
-          {added && (
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <button
-              onClick={() => router.push("/keranjang")}
+              onClick={() => {
+                addItem(product, qty);
+                setAdded(true);
+              }}
+              disabled={product.stock <= 0}
               style={{
-                padding: "13px 26px",
-                background: "transparent",
-                color: colors.ink,
-                border: `1.5px solid ${colors.ink}`,
-                borderRadius: 999,
+                padding: "14px 28px",
+                background: product.stock <= 0 ? "#b8ac96" : "var(--color-terracotta)",
+                color: "#fff",
+                border: "none",
+                borderRadius: "var(--radius-sm)",
                 fontWeight: 600,
-                fontFamily: fonts.body,
-                cursor: "pointer",
+                fontSize: 14,
+                cursor: product.stock <= 0 ? "not-allowed" : "pointer",
               }}
             >
-              Lihat Keranjang
+              {product.stock <= 0 ? "Stok Habis" : "Tambah ke Keranjang"}
             </button>
-          )}
+
+            {added && (
+              <button
+                onClick={() => router.push("/keranjang")}
+                style={{
+                  padding: "14px 28px",
+                  background: "transparent",
+                  color: "var(--color-charcoal)",
+                  border: "1px solid var(--color-charcoal)",
+                  borderRadius: "var(--radius-sm)",
+                  fontWeight: 600,
+                  fontSize: 14,
+                  cursor: "pointer",
+                }}
+              >
+                Lihat Keranjang
+              </button>
+            )}
+          </div>
         </div>
       </main>
-      <Footer />
     </>
   );
 }

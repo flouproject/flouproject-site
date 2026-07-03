@@ -1,135 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --color-sky-top: #A9C8E8;
+  --color-sky-bottom: #E8F0F7;
+  --color-charcoal: #1A1A1A;
+  --color-yellow: #F5E14A;
+  --color-white: #FFFFFF;
+  --color-border: rgba(26,26,26,0.12);
+  --color-pill: rgba(255,255,255,0.55);
+
+  --font-heading: 'Fredoka', sans-serif;
+  --font-script: 'Instrument Serif', serif;
+  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+}
+
 * {
   box-sizing: border-box;
 }
 
-:root {
-  --ink: #2e2e2e;
-  --paper: #fbf8f2;
-  --paper-raised: #ffffff;
-  --coral: #ed7e60;
-  --teal: #91dbc6;
-  --mustard: #f2c781;
-  --sage: #bfd78b;
-  --lavender: #caabd5;
-  --line: #ece5d6;
-  --text-muted: #7a7267;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
+html, body {
   margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  padding: 0;
+  background: var(--color-sky-bottom);
+  color: var(--color-charcoal);
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
-}
-
-h1, h2 {
-  font-family: "Caveat Brush", cursive;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  margin: 0;
-}
-
-h3 {
-  font-family: "Poppins", -apple-system, sans-serif;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  margin: 0;
 }
 
 a {
   color: inherit;
 }
 
-/* Elemen signature: deretan titik warna-warni sesuai palet logo,
-   dipakai sebagai pemisah antar section di seluruh situs. */
-.stitch-divider {
-  border: none;
-  height: 10px;
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  font-weight: 600;
   margin: 0;
-  background-image: radial-gradient(circle, var(--dot-color, var(--coral)) 3.5px, transparent 3.6px);
-  background-size: 22px 10px;
-  background-repeat: repeat-x;
-  background-position: center;
-  opacity: 0.9;
 }
 
-/* Label harga — dibuat tegas & rapi, kontras dengan judul yang playful */
-.tag-price {
-  font-family: "Poppins", sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.01em;
+button, input, textarea, select {
+  font-family: var(--font-body);
 }
 
-button {
-  font-family: "Poppins", sans-serif;
+.highlight-marker {
+  background: var(--color-yellow);
+  padding: 2px 10px;
+  display: inline-block;
+  transform: rotate(-1deg);
+}
+
+.wavy-underline {
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: #5B8DBF;
+  text-underline-offset: 4px;
+}
+
+@media (max-width: 900px) {
+  .polaroid-stack {
+    display: none;
+  }
 }
 
 :focus-visible {
-  outline: 2px solid var(--coral);
+  outline: 2px solid var(--color-charcoal);
   outline-offset: 2px;
-}
-
-/* Kartu event/produk — angkat halus saat di-hover, dipakai di listing
-   ala mynoosa (grid kartu bergambar). */
-.hover-card {
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-.hover-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px -12px rgba(46, 46, 46, 0.22);
-}
-
-/* Chip filter kategori — pil kecil warna-warni sesuai palet logo. */
-.chip {
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
-  font-size: 13px;
-  padding: 8px 18px;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
-  white-space: nowrap;
-}
-
-/* Baris scroll horizontal untuk "Event Terdekat", scrollbar disembunyikan. */
-.scroll-row {
-  display: flex;
-  gap: 18px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding-bottom: 8px;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.scroll-row::-webkit-scrollbar {
-  display: none;
-}
-.scroll-row > * {
-  scroll-snap-align: start;
-}
-
-/* Badge tanggal di pojok gambar kartu event. */
-.date-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 6px 10px;
-  text-align: center;
-  box-shadow: 0 4px 10px -4px rgba(46, 46, 46, 0.35);
-  line-height: 1.1;
 }
 
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
     transition: none !important;
-    scroll-behavior: auto !important;
   }
 }

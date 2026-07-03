@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { colors, fonts } from "../lib/theme";
+import { TICKET_TIERS } from "../lib/tickets";
 
 const MIDTRANS_CLIENT_KEY = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY;
 const MIDTRANS_IS_PRODUCTION =
@@ -11,7 +11,6 @@ const SNAP_SRC = MIDTRANS_IS_PRODUCTION
   : "https://app.sandbox.midtrans.com/snap/snap.js";
 
 function formatRupiah(amount) {
-  if (amount === 0) return "Gratis";
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
@@ -19,16 +18,18 @@ function formatRupiah(amount) {
   }).format(amount);
 }
 
-export default function RegistrationForm({ event }) {
-  const [form, setForm] = useState({ name: "", email: "", whatsapp: "" });
+export default function RegistrationForm() {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    whatsapp: "",
+    ticketTier: TICKET_TIERS[0]?.id || "",
+  });
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState(null); // { type: 'success'|'error'|'info', text }
   const [snapReady, setSnapReady] = useState(false);
 
-  const isFree = event.price === 0;
-
   useEffect(() => {
-    if (isFree) return; // event gratis tidak butuh Midtrans Snap
     const script = document.createElement("script");
     script.src = SNAP_SRC;
     script.setAttribute("data-client-key", MIDTRANS_CLIENT_KEY || "");
@@ -37,7 +38,7 @@ export default function RegistrationForm({ event }) {
     return () => {
       document.body.removeChild(script);
     };
-  }, [isFree]);
+  }, []);
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -47,7 +48,7 @@ export default function RegistrationForm({ event }) {
     e.preventDefault();
     setMessage(null);
 
-    if (!isFree && (!snapReady || !window.snap)) {
+    if (!snapReady || !window.snap) {
       setMessage({ type: "error", text: "Sistem pembayaran belum siap, coba lagi sebentar." });
       return;
     }
@@ -57,21 +58,12 @@ export default function RegistrationForm({ event }) {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, eventSlug: event.slug }),
+        body: JSON.stringify(form),
       });
       const data = await res.json();
 
       if (!res.ok) {
         setMessage({ type: "error", text: data.error || "Pendaftaran gagal." });
-        setLoading(false);
-        return;
-      }
-
-      if (data.free) {
-        setMessage({
-          type: "success",
-          text: "Pendaftaran berhasil! Sampai jumpa di lokasi ya.",
-        });
         setLoading(false);
         return;
       }
@@ -106,19 +98,23 @@ export default function RegistrationForm({ event }) {
     }
   }
 
+  const selectedTier = TICKET_TIERS.find((t) => t.id === form.ticketTier);
+
   return (
     <form
       onSubmit={handleSubmit}
       style={{
-        background: colors.paperRaised,
+        maxWidth: 480,
+        margin: "0 auto",
+        background: "#fff",
         borderRadius: 16,
         padding: 32,
-        border: `1px solid ${colors.line}`,
+        boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
       }}
     >
-      <h2 style={{ fontSize: 24, marginBottom: 4 }}>Daftar Sekarang</h2>
-      <p style={{ color: colors.textMuted, marginBottom: 22, fontSize: 14 }}>
-        Isi data di bawah untuk mengamankan tempatmu.
+      <h1 style={{ fontSize: 24, marginBottom: 4 }}>Pendaftaran Workshop</h1>
+      <p style={{ color: "#666", marginBottom: 24, fontSize: 14 }}>
+        Isi data di bawah, lalu lanjutkan ke pembayaran.
       </p>
 
       <Field label="Nama Lengkap">
@@ -155,24 +151,44 @@ export default function RegistrationForm({ event }) {
         />
       </Field>
 
+      <Field label="Tipe Tiket">
+        <select
+          required
+          name="ticketTier"
+          value={form.ticketTier}
+          onChange={handleChange}
+          style={inputStyle}
+        >
+          {TICKET_TIERS.map((tier) => (
+            <option key={tier.id} value={tier.id}>
+              {tier.name} — {formatRupiah(tier.price)}
+            </option>
+          ))}
+        </select>
+      </Field>
+
+      {selectedTier?.description && (
+        <p style={{ fontSize: 13, color: "#888", marginTop: -8, marginBottom: 16 }}>
+          {selectedTier.description}
+        </p>
+      )}
+
       <button
         type="submit"
         disabled={loading}
         style={{
           width: "100%",
           padding: "14px 0",
-          background: loading ? "#999" : colors.coral,
+          background: loading ? "#999" : "#111",
           color: "#fff",
           border: "none",
-          borderRadius: 999,
+          borderRadius: 10,
           fontSize: 16,
           fontWeight: 600,
-          fontFamily: fonts.body,
           cursor: loading ? "not-allowed" : "pointer",
-          marginTop: 6,
         }}
       >
-        {loading ? "Memproses..." : isFree ? "Daftar Gratis" : `Bayar ${formatRupiah(event.price)}`}
+        {loading ? "Memproses..." : `Bayar ${selectedTier ? formatRupiah(selectedTier.price) : ""}`}
       </button>
 
       {message && (
@@ -184,16 +200,16 @@ export default function RegistrationForm({ event }) {
             fontSize: 14,
             background:
               message.type === "success"
-                ? "#e9efe8"
+                ? "#e6f7ed"
                 : message.type === "error"
-                ? "#f6e8e5"
-                : "#e8eef2",
+                ? "#fdecea"
+                : "#eef3fb",
             color:
               message.type === "success"
-                ? colors.success
+                ? "#1e7e42"
                 : message.type === "error"
-                ? colors.danger
-                : colors.info,
+                ? "#c0392b"
+                : "#2c5aa0",
           }}
         >
           {message.text}
@@ -218,8 +234,7 @@ const inputStyle = {
   width: "100%",
   padding: "10px 12px",
   borderRadius: 8,
-  border: `1px solid ${colors.line}`,
+  border: "1px solid #ddd",
   fontSize: 15,
-  fontFamily: fonts.body,
   boxSizing: "border-box",
 };
