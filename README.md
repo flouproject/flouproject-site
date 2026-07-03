@@ -1,7 +1,7 @@
-# Website Bisnis: Produk Handmade & Workshop
+# Flou Project — Website Toko & Workshop
 
 Website lengkap dengan 3 bagian:
-- **Beranda** — info bisnis kamu
+- **Beranda** — profil & sorotan Flou Project
 - **Produk** (`/produk`) — katalog produk handmade dengan checkout online (Midtrans)
 - **Workshop** (`/workshop`) — form pendaftaran & pembayaran workshop (Midtrans)
 - **Admin** (`/admin`) — dashboard gabungan: pesanan produk & pendaftar workshop
