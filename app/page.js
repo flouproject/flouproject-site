@@ -11,7 +11,7 @@ export default function HomePage() {
         style={{
           position: "fixed",
           inset: 0,
-          background: "linear-gradient(180deg, var(--color-sky-top) 0%, var(--color-sky-bottom) 55%)",
+          background: "url('/images/bg-langit.jpg') center/cover no-repeat",
           zIndex: -1,
         }}
       />
