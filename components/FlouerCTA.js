@@ -61,32 +61,12 @@ export default function FlouerCTA() {
       </div>
 
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <RingBoxIllustration />
+        <img
+          src="/images/ring-box.png"
+          alt="Kotak cincin"
+          style={{ width: "100%", maxWidth: 280, height: "auto", display: "block" }}
+        />
       </div>
     </section>
-  );
-}
-
-function RingBoxIllustration() {
-  return (
-    <svg width="220" height="200" viewBox="0 0 220 200" fill="none" aria-hidden="true">
-      {/* Kotak bawah */}
-      <rect x="30" y="90" width="160" height="90" rx="14" fill="#F6C9CE" />
-      <rect x="30" y="90" width="160" height="90" rx="14" stroke="#E8A9B1" strokeWidth="2" />
-      {/* Tutup kotak terbuka */}
-      <path
-        d="M35 92 C35 40 75 10 110 10 C145 10 185 40 185 92 Z"
-        fill="#FADDE1"
-        stroke="#E8A9B1"
-        strokeWidth="2"
-      />
-      {/* Bantalan dalam kotak */}
-      <ellipse cx="110" cy="118" rx="58" ry="30" fill="#FCEEF0" />
-      {/* Cincin */}
-      <circle cx="110" cy="128" r="20" fill="none" stroke="#D9A441" strokeWidth="6" />
-      {/* Berlian */}
-      <polygon points="110,96 122,110 110,128 98,110" fill="#EAF6FF" stroke="#BFE0F2" strokeWidth="2" />
-      <polygon points="110,96 116,110 110,118 104,110" fill="#ffffff" />
-    </svg>
   );
 }
