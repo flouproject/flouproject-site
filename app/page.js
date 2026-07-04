@@ -49,7 +49,7 @@ export default function HomePage() {
               gap: 4,
             }}
           >
-            <span style={{ fontFamily: "var(--font-heading)", fontWeight: 600 }}>
+            <span style={{ fontFamily: "var(--font-flou)", fontWeight: 600 }}>
               flou
             </span>
             <span style={{ display: "inline-flex", alignItems: "baseline", gap: 6 }}>

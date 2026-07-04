@@ -49,7 +49,7 @@ export default function AboutSection() {
           </span>
         </h2>
 
-        <p style={{ fontSize: 15.5, lineHeight: 1.75, color: "#2c2c2c", maxWidth: 480 }}>
+        <p style={{ fontSize: 15.5, lineHeight: 1.75, color: "#2c2c2c", maxWidth: 480, textAlign: "justify" }}>
           Flou Project adalah ruang kreatif yang menghadirkan workshop santai dan
           fun untuk mengekspresikan diri. Melalui aktivitas seperti painting dan
           crafting, Flou Project mengajak setiap orang untuk sejenak jeda dari
