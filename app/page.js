@@ -2,6 +2,7 @@ import NavBar from "../components/NavBar";
 import PolaroidStack from "../components/PolaroidStack";
 import PolaroidRow from "../components/PolaroidRow";
 import AboutSection from "../components/AboutSection";
+import FlouerCTA from "../components/FlouerCTA";
 import { TOP_PHOTOS, BOTTOM_PHOTOS } from "../lib/photos";
 
 export default function HomePage() {
@@ -79,6 +80,9 @@ export default function HomePage() {
 
         {/* Section: Apa itu Flou Project */}
         <AboutSection />
+
+        {/* Section: CTA ke Workshop */}
+        <FlouerCTA />
       </main>
     </>
   );

@@ -62,6 +62,10 @@ button, input, textarea, select {
   background: #F0BB4D;
 }
 
+.highlight-marker.peach {
+  background: #F5C6A0;
+}
+
 .notes-card {
   margin-top: 26px;
   background: #FBF8F1;
