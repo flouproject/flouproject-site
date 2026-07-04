@@ -25,7 +25,7 @@ export default function FlouerCTA() {
             marginBottom: 18,
           }}
         >
-          <span style={{ fontFamily: "var(--font-heading)", fontWeight: 600 }}>
+          <span style={{ fontFamily: "var(--font-heading)", fontWeight: 400, fontSize: "calc(1em + 3px)" }}>
             will you be our{" "}
           </span>
           <br />
@@ -48,7 +48,7 @@ export default function FlouerCTA() {
             background: "var(--color-highlight-sage)",
             color: "#1A1A1A",
             fontFamily: "var(--font-heading)",
-            fontWeight: 600,
+            fontWeight: 400,
             fontSize: 14,
             letterSpacing: "0.02em",
             textDecoration: "none",

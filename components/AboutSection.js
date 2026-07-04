@@ -35,7 +35,7 @@ export default function AboutSection() {
             marginBottom: 18,
           }}
         >
-          <span style={{ fontFamily: "var(--font-heading)", fontWeight: 600 }}>
+          <span style={{ fontFamily: "var(--font-heading)", fontWeight: 400 }}>
             apa itu{" "}
           </span>
           <span style={{ fontFamily: "var(--font-script)", fontStyle: "italic" }}>
