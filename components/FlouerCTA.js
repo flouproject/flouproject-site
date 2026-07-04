@@ -6,17 +6,18 @@ export default function FlouerCTA() {
       className="flouer-section"
       style={{
         display: "grid",
-        gridTemplateColumns: "1fr minmax(220px, 340px)",
-        gap: 40,
+        gridTemplateColumns: "minmax(260px, 420px) minmax(200px, 300px)",
+        justifyContent: "center",
+        gap: 56,
         alignItems: "center",
         marginTop: 110,
         background: "rgba(255,255,255,0.55)",
         borderRadius: "var(--radius-lg)",
         border: "1px solid var(--color-border)",
-        padding: "40px 36px",
+        padding: "40px 48px",
       }}
     >
-      <div>
+      <div style={{ paddingLeft: "clamp(8px, 3vw, 28px)" }}>
         <h2
           style={{
             fontSize: "clamp(28px, 4.5vw, 40px)",

@@ -1,87 +1,87 @@
-import Link from "next/link";
-import { colors, fonts } from "../lib/theme";
-
 export default function Footer() {
   return (
     <footer
       style={{
-        borderTop: `1px solid ${colors.line}`,
-        padding: "40px 24px 28px",
-        marginTop: 64,
+        marginTop: 90,
+        padding: "36px 24px 40px",
+        textAlign: "center",
+        borderTop: "1px solid var(--color-border)",
       }}
     >
       <div
         style={{
-          maxWidth: 1040,
-          margin: "0 auto",
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 24,
-          justifyContent: "space-between",
-          alignItems: "flex-start",
+          fontFamily: "var(--font-flou)",
+          fontWeight: 600,
+          fontSize: 18,
+          marginBottom: 14,
         }}
       >
-        <div>
-          <img src="/logo.png" alt="Flou Project" style={{ height: 34, width: "auto", marginBottom: 10 }} />
-          <p style={{ fontSize: 13, color: colors.textMuted, maxWidth: 260, lineHeight: 1.6, margin: 0 }}>
-            Produk handmade & workshop kriya, dibuat perlahan dan penuh perhatian.
-          </p>
-        </div>
-
-        <div style={{ display: "flex", gap: 40, flexWrap: "wrap" }}>
-          <FooterCol
-            title="Jelajahi"
-            links={[
-              { href: "/produk", label: "Produk" },
-              { href: "/workshop", label: "Workshop" },
-              { href: "/#tentang", label: "Tentang Kami" },
-            ]}
-          />
-          <FooterCol
-            title="Terhubung"
-            links={[
-              { href: "https://instagram.com", label: "Instagram" },
-              { href: "https://wa.me/6280000000000", label: "WhatsApp" },
-              { href: "mailto:halo@flouproject.id", label: "Email" },
-            ]}
-          />
-        </div>
+        flou project
       </div>
 
       <div
         style={{
-          maxWidth: 1040,
-          margin: "32px auto 0",
-          paddingTop: 20,
-          borderTop: `1px solid ${colors.line}`,
-          fontSize: 12,
-          color: colors.textMuted,
-          fontFamily: fonts.body,
+          display: "flex",
+          justifyContent: "center",
+          gap: 24,
+          flexWrap: "wrap",
+          marginBottom: 16,
         }}
       >
-        © {new Date().getFullYear()} Flou Project. Dibuat dengan tangan.
+        <a
+          href="https://instagram.com/by.flouprojects"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={socialLinkStyle}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="3" width="18" height="18" rx="5" stroke="#1A1A1A" strokeWidth="1.8" />
+            <circle cx="12" cy="12" r="4" stroke="#1A1A1A" strokeWidth="1.8" />
+            <circle cx="17.2" cy="6.8" r="1.1" fill="#1A1A1A" />
+          </svg>
+          Instagram · @by.flouprojects
+        </a>
+
+        <a
+          href="https://tiktok.com/@by.flouprojects"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={socialLinkStyle}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M14 3v10.2a2.8 2.8 0 1 1-2-2.68"
+              stroke="#1A1A1A"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M14 3c.3 2.2 2 3.9 4.2 4.2"
+              stroke="#1A1A1A"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          TikTok · @by.flouprojects
+        </a>
       </div>
+
+      <p style={{ fontSize: 12.5, color: "#5c5c5c", margin: 0 }}>
+        &copy; {new Date().getFullYear()} Flou Project. Berbasis di Cianjur.
+      </p>
     </footer>
   );
 }
 
-function FooterCol({ title, links }) {
-  return (
-    <div>
-      <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: colors.ink, marginBottom: 12 }}>
-        {title}
-      </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {links.map((l) => (
-          <Link
-            key={l.label}
-            href={l.href}
-            style={{ fontSize: 14, color: colors.textMuted, textDecoration: "none" }}
-          >
-            {l.label}
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
+const socialLinkStyle = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 8,
+  fontFamily: "var(--font-body)",
+  fontSize: 13.5,
+  fontWeight: 600,
+  color: "#1A1A1A",
+  textDecoration: "none",
+};

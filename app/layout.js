@@ -1,5 +1,6 @@
 import "./globals.css";
 import { CartProvider } from "../lib/CartContext";
+import Footer from "../components/Footer";
 
 export const metadata = {
   title: "Flou Project",
@@ -25,7 +26,10 @@ export default function RootLayout({ children }) {
             zIndex: -1,
           }}
         />
-        <CartProvider>{children}</CartProvider>
+        <CartProvider>
+          {children}
+          <Footer />
+        </CartProvider>
       </body>
     </html>
   );

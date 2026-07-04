@@ -109,6 +109,11 @@ button, input, textarea, select {
     max-width: 220px;
     margin: 0 auto;
   }
+  .flouer-section {
+    grid-template-columns: 1fr !important;
+    padding: 32px 24px !important;
+    text-align: center;
+  }
 }
 
 .section-card {
