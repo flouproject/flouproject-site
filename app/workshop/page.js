@@ -1,12 +1,14 @@
-import RegistrationForm from "../../components/RegistrationForm";
 import NavBar from "../../components/NavBar";
+import PastWorkshopsHero from "../../components/PastWorkshopsHero";
+import UpcomingWorkshopCTA from "../../components/UpcomingWorkshopCTA";
 
 export default function WorkshopPage() {
   return (
     <>
       <NavBar />
-      <main style={{ padding: "48px 16px" }}>
-        <RegistrationForm />
+      <main>
+        <PastWorkshopsHero />
+        <UpcomingWorkshopCTA />
       </main>
     </>
   );

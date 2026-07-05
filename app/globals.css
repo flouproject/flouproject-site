@@ -114,6 +114,17 @@ button, input, textarea, select {
     padding: 32px 24px !important;
     text-align: center;
   }
+  .past-workshops-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .upcoming-workshop-section {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+  }
+  .upcoming-workshop-section p {
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .section-card {
