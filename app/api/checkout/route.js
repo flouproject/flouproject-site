@@ -74,6 +74,9 @@ export async function POST(request) {
     return NextResponse.json({ orderId, amount });
   } catch (err) {
     console.error("Checkout error:", err);
-    return NextResponse.json({ error: "Terjadi kesalahan pada server." }, { status: 500 });
+    return NextResponse.json(
+      { error: `Terjadi kesalahan pada server: ${err.message || err}` },
+      { status: 500 }
+    );
   }
 }

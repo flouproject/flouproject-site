@@ -72,7 +72,7 @@ export async function POST(request) {
   } catch (err) {
     console.error("Register error:", err);
     return NextResponse.json(
-      { error: "Terjadi kesalahan pada server." },
+      { error: `Terjadi kesalahan pada server: ${err.message || err}` },
       { status: 500 }
     );
   }
