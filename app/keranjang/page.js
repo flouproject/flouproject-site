@@ -1,14 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import NavBar from "../../components/NavBar";
 import { useCart } from "../../lib/CartContext";
-
-const MIDTRANS_CLIENT_KEY = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY;
-const MIDTRANS_IS_PRODUCTION = process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION === "true";
-const SNAP_SRC = MIDTRANS_IS_PRODUCTION
-  ? "https://app.midtrans.com/snap/snap.js"
-  : "https://app.sandbox.midtrans.com/snap/snap.js";
+import ManualPaymentInfo from "../../components/ManualPaymentInfo";
 
 function formatRupiah(amount) {
   return new Intl.NumberFormat("id-ID", {
@@ -22,17 +17,8 @@ export default function KeranjangPage() {
   const { items, updateQty, removeItem, total, clearCart } = useCart();
   const [form, setForm] = useState({ name: "", email: "", whatsapp: "", address: "" });
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState(null);
-  const [snapReady, setSnapReady] = useState(false);
-
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = SNAP_SRC;
-    script.setAttribute("data-client-key", MIDTRANS_CLIENT_KEY || "");
-    script.onload = () => setSnapReady(true);
-    document.body.appendChild(script);
-    return () => document.body.removeChild(script);
-  }, []);
+  const [error, setError] = useState(null);
+  const [paymentInfo, setPaymentInfo] = useState(null); // { orderId, amount }
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -40,13 +26,9 @@ export default function KeranjangPage() {
 
   async function handleCheckout(e) {
     e.preventDefault();
-    setMessage(null);
+    setError(null);
     if (items.length === 0) {
-      setMessage({ type: "error", text: "Keranjang kamu masih kosong." });
-      return;
-    }
-    if (!snapReady || !window.snap) {
-      setMessage({ type: "error", text: "Sistem pembayaran belum siap, coba lagi sebentar." });
+      setError("Keranjang kamu masih kosong.");
       return;
     }
     setLoading(true);
@@ -58,21 +40,32 @@ export default function KeranjangPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setMessage({ type: "error", text: data.error || "Checkout gagal." });
+        setError(data.error || "Checkout gagal.");
         setLoading(false);
         return;
       }
-      window.snap.pay(data.snapToken, {
-        onSuccess: () => { setMessage({ type: "success", text: "Pembayaran berhasil! Terima kasih sudah belanja." }); clearCart(); },
-        onPending: () => { setMessage({ type: "info", text: "Pembayaran sedang diproses." }); clearCart(); },
-        onError: () => setMessage({ type: "error", text: "Pembayaran gagal, silakan coba lagi." }),
-        onClose: () => setMessage({ type: "info", text: "Kamu menutup jendela pembayaran sebelum selesai." }),
-      });
+      setPaymentInfo(data);
+      clearCart();
     } catch (err) {
-      setMessage({ type: "error", text: "Terjadi kesalahan, coba lagi." });
+      setError("Terjadi kesalahan, coba lagi.");
     } finally {
       setLoading(false);
     }
+  }
+
+  if (paymentInfo) {
+    return (
+      <>
+        <NavBar />
+        <main style={{ padding: "40px 24px 100px", maxWidth: 640, margin: "0 auto" }}>
+          <ManualPaymentInfo
+            orderId={paymentInfo.orderId}
+            amount={paymentInfo.amount}
+            itemLabel="Pesanan Produk"
+          />
+        </main>
+      </>
+    );
   }
 
   return (
@@ -109,14 +102,14 @@ export default function KeranjangPage() {
             <Field label="No. WhatsApp"><input required name="whatsapp" value={form.whatsapp} onChange={handleChange} style={inputStyle} /></Field>
             <Field label="Alamat Pengiriman"><textarea required name="address" value={form.address} onChange={handleChange} rows={3} style={{ ...inputStyle, resize: "vertical" }} /></Field>
             <button type="submit" disabled={loading} style={{ width: "100%", padding: "14px 0", background: loading ? "#999" : "var(--color-charcoal)", color: "#fff", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 600, cursor: loading ? "not-allowed" : "pointer", marginTop: 8 }}>
-              {loading ? "Memproses..." : `Bayar ${formatRupiah(total)}`}
+              {loading ? "Memproses..." : `Lanjut ke Pembayaran — ${formatRupiah(total)}`}
             </button>
           </form>
         )}
 
-        {message && (
-          <div style={{ marginTop: 16, padding: 12, borderRadius: 8, fontSize: 14, background: message.type === "success" ? "#e6f7ed" : message.type === "error" ? "#fdecea" : "#eef3fb", color: message.type === "success" ? "#1e7e42" : message.type === "error" ? "#c0392b" : "#2c5aa0" }}>
-            {message.text}
+        {error && (
+          <div style={{ marginTop: 16, padding: 12, borderRadius: 8, fontSize: 14, background: "#fdecea", color: "#c0392b" }}>
+            {error}
           </div>
         )}
       </main>

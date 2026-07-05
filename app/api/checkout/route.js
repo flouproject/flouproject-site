@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { getSupabaseServerClient } from "../../../lib/supabase";
 
-const MIDTRANS_IS_PRODUCTION = process.env.MIDTRANS_IS_PRODUCTION === "true";
-const MIDTRANS_SNAP_URL = MIDTRANS_IS_PRODUCTION
-  ? "https://app.midtrans.com/snap/v1/transactions"
-  : "https://app.sandbox.midtrans.com/snap/v1/transactions";
+// CATATAN: sementara pembayaran otomatis via Midtrans belum aktif
+// (masih menunggu proses approval merchant), alur ini memakai
+// transfer manual + konfirmasi WhatsApp, sama seperti /api/register.
+// Setelah Midtrans approve, tinggal aktifkan lagi pemanggilan Snap API di sini.
 
 export async function POST(request) {
   try {
@@ -63,7 +63,7 @@ export async function POST(request) {
         address,
         items: verifiedItems,
         amount,
-        payment_status: "pending",
+        payment_status: "pending_manual_transfer",
         midtrans_order_id: orderId,
       })
       .select()
@@ -71,45 +71,7 @@ export async function POST(request) {
 
     if (insertError) throw insertError;
 
-    const serverKey = process.env.MIDTRANS_SERVER_KEY;
-    if (!serverKey) {
-      return NextResponse.json(
-        { error: "MIDTRANS_SERVER_KEY belum diset." },
-        { status: 500 }
-      );
-    }
-    const authHeader = "Basic " + Buffer.from(`${serverKey}:`).toString("base64");
-
-    const midtransRes = await fetch(MIDTRANS_SNAP_URL, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: authHeader,
-      },
-      body: JSON.stringify({
-        transaction_details: { order_id: orderId, gross_amount: amount },
-        customer_details: { first_name: name, email, phone: whatsapp },
-        item_details: verifiedItems.map((i) => ({
-          id: i.product_id,
-          price: i.price,
-          quantity: i.qty,
-          name: i.name,
-        })),
-      }),
-    });
-
-    const midtransData = await midtransRes.json();
-
-    if (!midtransRes.ok) {
-      await supabase.from("orders").update({ payment_status: "failed" }).eq("id", inserted.id);
-      return NextResponse.json(
-        { error: midtransData.error_messages?.join(", ") || "Gagal membuat transaksi." },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({ snapToken: midtransData.token, orderId });
+    return NextResponse.json({ orderId, amount });
   } catch (err) {
     console.error("Checkout error:", err);
     return NextResponse.json({ error: "Terjadi kesalahan pada server." }, { status: 500 });

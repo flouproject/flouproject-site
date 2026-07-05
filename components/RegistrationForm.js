@@ -1,14 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { TICKET_TIERS } from "../lib/tickets";
-
-const MIDTRANS_CLIENT_KEY = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY;
-const MIDTRANS_IS_PRODUCTION =
-  process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION === "true";
-const SNAP_SRC = MIDTRANS_IS_PRODUCTION
-  ? "https://app.midtrans.com/snap/snap.js"
-  : "https://app.sandbox.midtrans.com/snap/snap.js";
+import ManualPaymentInfo from "./ManualPaymentInfo";
 
 function formatRupiah(amount) {
   return new Intl.NumberFormat("id-ID", {
@@ -26,19 +20,8 @@ export default function RegistrationForm() {
     ticketTier: TICKET_TIERS[0]?.id || "",
   });
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState(null); // { type: 'success'|'error'|'info', text }
-  const [snapReady, setSnapReady] = useState(false);
-
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = SNAP_SRC;
-    script.setAttribute("data-client-key", MIDTRANS_CLIENT_KEY || "");
-    script.onload = () => setSnapReady(true);
-    document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
+  const [error, setError] = useState(null);
+  const [paymentInfo, setPaymentInfo] = useState(null); // { orderId, amount, ticketName }
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -46,14 +29,9 @@ export default function RegistrationForm() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setMessage(null);
-
-    if (!snapReady || !window.snap) {
-      setMessage({ type: "error", text: "Sistem pembayaran belum siap, coba lagi sebentar." });
-      return;
-    }
-
+    setError(null);
     setLoading(true);
+
     try {
       const res = await fetch("/api/register", {
         method: "POST",
@@ -63,42 +41,30 @@ export default function RegistrationForm() {
       const data = await res.json();
 
       if (!res.ok) {
-        setMessage({ type: "error", text: data.error || "Pendaftaran gagal." });
+        setError(data.error || "Pendaftaran gagal.");
         setLoading(false);
         return;
       }
 
-      window.snap.pay(data.snapToken, {
-        onSuccess: () => {
-          setMessage({
-            type: "success",
-            text: "Pembayaran berhasil! Cek email kamu untuk konfirmasi.",
-          });
-        },
-        onPending: () => {
-          setMessage({
-            type: "info",
-            text: "Pembayaran kamu sedang diproses. Kami akan update status begitu terkonfirmasi.",
-          });
-        },
-        onError: () => {
-          setMessage({ type: "error", text: "Pembayaran gagal, silakan coba lagi." });
-        },
-        onClose: () => {
-          setMessage({
-            type: "info",
-            text: "Kamu menutup jendela pembayaran sebelum selesai. Kamu bisa daftar ulang untuk melanjutkan.",
-          });
-        },
-      });
+      setPaymentInfo(data);
     } catch (err) {
-      setMessage({ type: "error", text: "Terjadi kesalahan, coba lagi." });
+      setError("Terjadi kesalahan, coba lagi.");
     } finally {
       setLoading(false);
     }
   }
 
   const selectedTier = TICKET_TIERS.find((t) => t.id === form.ticketTier);
+
+  if (paymentInfo) {
+    return (
+      <ManualPaymentInfo
+        orderId={paymentInfo.orderId}
+        amount={paymentInfo.amount}
+        itemLabel={`Pendaftaran Workshop — ${paymentInfo.ticketName}`}
+      />
+    );
+  }
 
   return (
     <form
@@ -188,31 +154,21 @@ export default function RegistrationForm() {
           cursor: loading ? "not-allowed" : "pointer",
         }}
       >
-        {loading ? "Memproses..." : `Bayar ${selectedTier ? formatRupiah(selectedTier.price) : ""}`}
+        {loading ? "Memproses..." : `Lanjut ke Pembayaran — ${selectedTier ? formatRupiah(selectedTier.price) : ""}`}
       </button>
 
-      {message && (
+      {error && (
         <div
           style={{
             marginTop: 16,
             padding: 12,
             borderRadius: 8,
             fontSize: 14,
-            background:
-              message.type === "success"
-                ? "#e6f7ed"
-                : message.type === "error"
-                ? "#fdecea"
-                : "#eef3fb",
-            color:
-              message.type === "success"
-                ? "#1e7e42"
-                : message.type === "error"
-                ? "#c0392b"
-                : "#2c5aa0",
+            background: "#fdecea",
+            color: "#c0392b",
           }}
         >
-          {message.text}
+          {error}
         </div>
       )}
     </form>
