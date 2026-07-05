@@ -3,7 +3,6 @@
 import { useState } from "react";
 import NavBar from "../../components/NavBar";
 import { useCart } from "../../lib/CartContext";
-import ManualPaymentInfo from "../../components/ManualPaymentInfo";
 
 function formatRupiah(amount) {
   return new Intl.NumberFormat("id-ID", {
@@ -18,7 +17,7 @@ export default function KeranjangPage() {
   const [form, setForm] = useState({ name: "", email: "", whatsapp: "", address: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [paymentInfo, setPaymentInfo] = useState(null); // { orderId, amount }
+  const [done, setDone] = useState(false);
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -44,8 +43,10 @@ export default function KeranjangPage() {
         setLoading(false);
         return;
       }
-      setPaymentInfo(data);
+      const url = `/pembayaran?orderId=${encodeURIComponent(data.orderId)}&amount=${data.amount}&item=${encodeURIComponent("Pesanan Produk")}`;
+      window.open(url, "_blank");
       clearCart();
+      setDone(true);
     } catch (err) {
       setError("Terjadi kesalahan, coba lagi.");
     } finally {
@@ -53,16 +54,33 @@ export default function KeranjangPage() {
     }
   }
 
-  if (paymentInfo) {
+  if (done) {
     return (
       <>
         <NavBar />
-        <main style={{ padding: "40px 24px 100px", maxWidth: 640, margin: "0 auto" }}>
-          <ManualPaymentInfo
-            orderId={paymentInfo.orderId}
-            amount={paymentInfo.amount}
-            itemLabel="Pesanan Produk"
-          />
+        <main style={{ padding: "40px 24px 100px", maxWidth: 480, margin: "0 auto", textAlign: "center" }}>
+          <div style={{ background: "rgba(255,255,255,0.85)", borderRadius: 18, padding: 32 }}>
+            <h2 style={{ fontSize: 20, marginBottom: 8 }}>Checkout Berhasil! 🎉</h2>
+            <p style={{ color: "#555", fontSize: 14, marginBottom: 20 }}>
+              Halaman pembayaran sudah terbuka di tab baru. Kalau tidak muncul
+              (mungkin diblokir browser), klik tombol di bawah ini.
+            </p>
+            <button
+              onClick={() => setDone(false)}
+              style={{
+                padding: "10px 20px",
+                background: "var(--color-charcoal)",
+                color: "#fff",
+                border: "none",
+                borderRadius: 8,
+                fontWeight: 600,
+                cursor: "pointer",
+                fontSize: 13,
+              }}
+            >
+              Belanja Lagi
+            </button>
+          </div>
         </main>
       </>
     );
